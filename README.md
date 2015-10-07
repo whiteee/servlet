@@ -1,1 +1,1 @@
-# servlet
+# My homework repo (Gimranov Ainur)
