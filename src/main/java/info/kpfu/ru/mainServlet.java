@@ -1,4 +1,4 @@
-package info.kpfu.ru;
+package info.kpfu.ru.servlets;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,7 +26,7 @@ public class mainServlet extends HttpServlet {
             throws ServletException, IOException {
         resp.setContentType("text/html;charset=UTF-8");
         PrintWriter out = resp.getWriter();
-        writeToFile(req.getParameter("mail"), req.getParameter("pass"), req.getParameter("id"), req.getParameter("chb"));
+        writeToFile(req.getParameter("mail"), req.getParameter("pass"), req.getParameter("sex"), req.getParameter("chb"));
         writeForm(out,"<br>Added");
         }
 
@@ -38,8 +38,8 @@ public class mainServlet extends HttpServlet {
                 +"<input type ='email' name = 'mail'></label> <br>"
                 +"<label>Пароль: <br>"
                 +"<input type ='password' name='pass'></label> <br>"
-                +"<input type='radio' name='sex'> Муж"
-                +"<input type='radio' name='sex'> Жен <br>"
+                +"<input type='radio' name='sex' value='1'> Муж"
+                +"<input type='radio' name='sex' value='0'> Жен <br>"
                 +"<label><input type ='checkbox' name='chb'></label>Подписаться на новости <br>"
                 +"<input type ='submit' value='Зарегестрироваться'>"
                 + s +"</form>"
@@ -64,7 +64,7 @@ public class mainServlet extends HttpServlet {
             if (sex == null) {
                 sex = "unknown";
             }
-            pw.printf("%s\t%s\t%s\t%s", email, password, sex, checkbox_status);
+            pw.printf("%s\t%s\t%s\t%s\n", email, password, sex, checkbox_status);
         }
         catch(IOException ex){
             System.out.println(ex.getMessage());

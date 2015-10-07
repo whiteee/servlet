@@ -1,4 +1,4 @@
-package info.kpfu.ru;
+package info.kpfu.ru.servlets;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -38,7 +38,7 @@ public class DBservlet extends HttpServlet{
                     +"<td>" + list.get(i)+"</td><td>"
                     + list.get(i+1) + "</td><td>"
                     + list.get(i+2) + "</td><td>"
-                    + list.get(i+3) + "</td><td>");
+                    + list.get(i+3) + "</td>");
         }
         out.print("</table></body></html>");
     }
