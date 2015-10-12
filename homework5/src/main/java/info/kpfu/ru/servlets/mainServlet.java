@@ -1,14 +1,15 @@
 package info.kpfu.ru.servlets;
 
+import info.kpfu.ru.entity.User;
+import info.kpfu.ru.exceptions.*;
+import info.kpfu.ru.repository.UserRepo;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.Scanner;
 public class mainServlet extends HttpServlet {
-
-    public static final File FILE = new File("/home/asus2/file.txt");
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -26,50 +27,38 @@ public class mainServlet extends HttpServlet {
             throws ServletException, IOException {
         resp.setContentType("text/html;charset=UTF-8");
         PrintWriter out = resp.getWriter();
-        writeToFile(req.getParameter("mail"), req.getParameter("pass"), req.getParameter("sex"), req.getParameter("chb"));
-        writeForm(out,"<br>Added");
+        String email = req.getParameter("mail");
+        String pwd = req.getParameter("pwd");
+        String sex = req.getParameter("sex");
+        String chb = req.getParameter("chb");
+        try{
+            User user = new User(email, pwd, sex, chb);
+            UserRepo.addUserToList(user);
         }
+        catch(DBEception ex){
+            req.setAttribute("message", "Error with DB has been occured.");
+        }
+        catch(duplicateException ex){
+            req.setAttribute("message", "User with such email already exists.");
+        }
+        writeForm(out,"<br>Added");
+    }
 
 
     protected void writeForm(PrintWriter out,String s){
         out.print("<h1>Регистрация</h1>"
                 +"<form action= 'http://localhost:8080/main' method = 'post'"
                 +"<label>Ваш e-mail: <br>"
-                +"<input type ='email' name = 'mail'></label> <br>"
+                +"<input type ='text' name = 'mail'></label> <br>"
                 +"<label>Пароль: <br>"
-                +"<input type ='password' name='pass'></label> <br>"
-                +"<input type='radio' name='sex' value='1'> Муж"
-                +"<input type='radio' name='sex' value='0'> Жен <br>"
+                +"<input type ='password' name='pwd'></label> <br>"
+                +"<input type='radio' name='sex' value='male'> Муж"
+                +"<input type='radio' name='sex' value='female'> Жен <br>"
                 +"<label><input type ='checkbox' name='chb'></label>Подписаться на новости <br>"
                 +"<input type ='submit' value='Зарегестрироваться'>"
                 + s +"</form>"
         );
     }
 
-
-    protected void writeToFile(String email, String password, String sex, String checkbox_status){
-        StringBuilder sb = new StringBuilder();
-        try(Scanner sc = new Scanner(FILE)) {
-            while (sc.hasNext()){
-                sb.append(sc.nextLine()).append("\n");
-            }
-        } catch(IOException ex){
-            System.out.println(ex.getMessage());
-        }
-        try(PrintWriter pw = new PrintWriter(FILE)) {
-            pw.print(sb.toString());
-            if (checkbox_status == null){
-                checkbox_status = "off";
-            }
-            if (sex == null) {
-                sex = "unknown";
-            }
-            pw.printf("%s\t%s\t%s\t%s\n", email, password, sex, checkbox_status);
-        }
-        catch(IOException ex){
-            System.out.println(ex.getMessage());
-        }
-
-    }
 
 }

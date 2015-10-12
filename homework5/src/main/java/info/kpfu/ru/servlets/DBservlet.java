@@ -1,12 +1,13 @@
 package info.kpfu.ru.servlets;
 
+import info.kpfu.ru.exceptions.DBEception;
+import info.kpfu.ru.utils.DB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.List;
 
 public class DBservlet extends HttpServlet{
     @Override
@@ -14,10 +15,14 @@ public class DBservlet extends HttpServlet{
         resp.setContentType("text/html");
         resp.setCharacterEncoding("utf-8");
         PrintWriter out = resp.getWriter();
-        getList(out);
+        try {
+            getList(out);
+        } catch (DBEception dbEception) {
+            dbEception.printStackTrace();
+        }
     }
 
-    protected void getList(PrintWriter out){
+    protected void getList(PrintWriter out) throws DBEception{
         out.print("<html>"
                 +"<head><meta charset='utf-8'>"
                 +"<title>database</title>"
@@ -32,26 +37,18 @@ public class DBservlet extends HttpServlet{
                 +"<tr style=text-align:center;>"
                 +"<th>Email</th><th>Password</th><th>Пол</th><th>Подписка на новости</th>"
                 +"</tr>");
-        ArrayList<String> list = getList();
-        for (int i = 0; i < list.size(); i += 4) {
+
+        List<String[]> users = DB.getAllUsers();
+        int i =0;
+        while(!users.isEmpty()) {
             out.print("<tr style='text-align:left;'>"
-                    +"<td>" + list.get(i)+"</td><td>"
-                    + list.get(i+1) + "</td><td>"
-                    + list.get(i+2) + "</td><td>"
-                    + list.get(i+3) + "</td>");
+                    +"<td>" + users.get(i)[0] +"</td><td>"
+                    + users.get(i)[1] + "</td><td>"
+                    + users.get(i)[2] + "</td><td>"
+                    + users.get(i)[3] + "</td>");
+            i++;
         }
+
         out.print("</table></body></html>");
     }
-    private ArrayList<String> getList(){
-        ArrayList<String> list = new ArrayList<>();
-        try(Scanner sc = new Scanner(mainServlet.FILE)) {
-            while (sc.hasNext()){
-                list.add(sc.next());
-            }
-        } catch (IOException e) {
-            e.getMessage();
-        }
-        return list;
-    }
-
 }

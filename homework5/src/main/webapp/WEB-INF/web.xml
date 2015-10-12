@@ -4,7 +4,7 @@
          version="3.0">
     <servlet>
         <servlet-name>mainServlet</servlet-name>
-        <servlet-class>info.kpfu.ru.mainServlet</servlet-class>
+        <servlet-class>info.kpfu.ru.servlets.mainServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -13,7 +13,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>DBservlet</servlet-name>
-        <servlet-class>info.kpfu.ru.DBservlet</servlet-class>
+        <servlet-class>info.kpfu.ru.servlets.DBservlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>DBservlet</servlet-name>
